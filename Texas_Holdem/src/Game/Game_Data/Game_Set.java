@@ -3,8 +3,8 @@ package Game.Game_Data;
 import java.util.List;
 
 public abstract class Game_Set {
-	private List cardList;
-	private int money;
+	protected List cardList;
+	protected int money;
 
 	public int getMoney() {
 		return money;
@@ -17,8 +17,7 @@ public abstract class Game_Set {
 	public void getCard(int card){
 		cardList.add(card);
 	}
-	public void operateMoney(int bettingMoney){
-		this.money=this.money+bettingMoney;
+	public List getCardList(){
+		return cardList;
 	}
-
 }
