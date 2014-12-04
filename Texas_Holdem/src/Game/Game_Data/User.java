@@ -4,10 +4,12 @@ import java.util.LinkedList;
 
 public class User extends Game_Set {
 	private boolean isAlive;
+	private int userID;
 
-	public User() {
+	public User(int userID) {
 		cardList = new LinkedList();
-		money=0;
+		money = 0;
+		this.userID = userID;
 	}
 
 	public boolean getState() {
@@ -18,4 +20,7 @@ public class User extends Game_Set {
 		isAlive = state;
 	}
 
+	public void getTurn() {
+
+	}
 }

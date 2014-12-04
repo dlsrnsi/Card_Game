@@ -1,11 +1,25 @@
 package Game.Game_Data;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import Game.Proxy.Dealer_Proxy;
+import Game.Proxy.Proxy;
+import Game.Proxy.User_Proxy;
+
 public class Game_Controller {
 	Game_Model gm;
 	int numOfUser;
+	List<Thread> playerThreadList;
 
 	public Game_Controller() {
-
+		playerThreadList=new LinkedList();
+		Thread dealer_Thread=new Thread(new Dealer_Proxy(0));
+		playerThreadList.add(dealer_Thread);
+		for(int i=0;i<numOfUser;i++){
+			Thread user_Thread=new Thread(new User_Proxy(i+1));
+			playerThreadList.add(user_Thread);
+		}
 	}
 
 	public void startGame(int numOfUser, int numOfJoker, int minimalBet) {
@@ -24,6 +38,7 @@ public class Game_Controller {
 								.toString() + "을 가지고 있다");*/
 			}
 		}
+		System.out.println(gm.getCardList().size());
 
 	}
 
@@ -34,7 +49,6 @@ public class Game_Controller {
 	}
 
 	public void giveCard(Game_Set set) {
-		System.out.println(gm.getCardList().size());
 		set.cardList.add(gm.getCardList().get(gm.getCardList().size() - 1));
 		gm.getCardList().remove(gm.getCardList().size() - 1);
 	}

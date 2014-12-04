@@ -14,7 +14,7 @@ public class Game_Model {
 	public Game_Model(int numOfUser, int joker, int minimalBet) {
 		userList = new LinkedList();
 		for (int i = 0; i < numOfUser; i++) {
-			User user = new User();
+			User user = new User(i);
 			user.setMoney(1000);// 유저는 1000원을 가지고 시작한다
 			System.out.println("유저" + i + "가 생성되었습니다");
 			userList.add(user);
@@ -45,7 +45,7 @@ public class Game_Model {
 	}
 
 	public User distinguishWinner() {
-		User winner = new User();// 나중에 바꿉시다
+		User winner = new User(0);// 나중에 바꿉시다
 		return winner;
 	}
 

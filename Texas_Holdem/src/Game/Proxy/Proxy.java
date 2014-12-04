@@ -6,4 +6,6 @@ public interface Proxy {
 	public void die();
 	public void check();
 	public void exitgame();
+	public void getTurn();//Run
+	public int getUserID();
 }
