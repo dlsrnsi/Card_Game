@@ -1,14 +1,21 @@
 package Game.Game_Data;
 
-public class User extends Game_Set{
+import java.util.LinkedList;
+
+public class User extends Game_Set {
 	private boolean isAlive;
+
+	public User() {
+		cardList = new LinkedList();
+		money=0;
+	}
 
 	public boolean getState() {
 		return isAlive;
 	}
 
-	public void setState(boolean die) {
-
+	public void setState(boolean state) {
+		isAlive = state;
 	}
 
 }

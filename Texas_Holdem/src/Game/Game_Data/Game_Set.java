@@ -13,11 +13,12 @@ public abstract class Game_Set {
 	public void setMoney(int money) {
 		this.money = money;
 	}
-	
-	public void getCard(int card){
+
+	public void getCard(int card) {
 		cardList.add(card);
 	}
-	public List getCardList(){
+
+	public List getCardList() {
 		return cardList;
 	}
 }
