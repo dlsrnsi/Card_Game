@@ -6,11 +6,13 @@ import java.util.concurrent.locks.ReentrantLock;
 import Game.Game_Data.*;
 
 public class Dealer_Proxy implements Proxy,Runnable {
+	Game_Controller gc;
 	int numOfJoker = 0;
 	int minimalBet = 1;
 	int userID;
 	Lock lock;
-	public Dealer_Proxy(int userID){
+	public Dealer_Proxy(Game_Controller gc, int userID){
+		this.gc = gc;
 		this.userID = userID;
 		lock = new ReentrantLock();
 	}

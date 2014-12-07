@@ -3,11 +3,13 @@ package Game.Proxy;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import Game.Game_Data.Game_Controller;
+
 public class User_Proxy implements Proxy, Runnable {
 	int userID;
 	Lock lock;
 
-	public User_Proxy(int userID) {
+	public User_Proxy(Game_Controller gc, int userID) {
 		this.userID = userID;
 		lock = new ReentrantLock();
 	}

@@ -3,9 +3,10 @@ package Game.Game_Data;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
 import java.util.Random;
 
-public class Game_Model {
+public class Game_Model extends Observable{
 	private List<User> userList;
 	private Table table;
 	private List cardList;
@@ -36,9 +37,6 @@ public class Game_Model {
 				cardList.add(ran);
 			}
 		}
-		for (int i = 0; i < 52 + joker; i++) {
-			System.out.println(i + "번째 카드는" + cardList.get(i));
-		}
 		table = new Table();
 		table.setMoney(0);// 테이블에서는 0원(베팅머니 없음)
 		int curUser = 0;// 게임이 시작할때 현재 유저는 0번째 유저이다(딜러)
@@ -57,6 +55,10 @@ public class Game_Model {
 		return (User) userList.get(curUser);
 	}
 
+	public void setCurUser(int i) {
+		this.curUser = i;
+	}
+
 	public List<User> getUserList() {
 		return userList;
 	}
@@ -67,6 +69,10 @@ public class Game_Model {
 
 	public Table getTable() {
 		return table;
+	}
+	
+	public void notifyObserver(){
+		
 	}
 
 }

@@ -2,28 +2,34 @@ package Game.Game_Data;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import Game.Proxy.Dealer_Proxy;
 import Game.Proxy.Proxy;
 import Game.Proxy.User_Proxy;
 
-public class Game_Controller {
-	Game_Model gm;
-	int numOfUser;
-	List<Thread> playerThreadList;
+public class Game_Controller implements Observer{
+	private Game_Model gm;	
+	private int numOfUser;
+	private List<Thread> playerThreadList;
+	private Observable observable;
 
 	public Game_Controller() {
+		
 		playerThreadList=new LinkedList();
-		Thread dealer_Thread=new Thread(new Dealer_Proxy(0));
+		Thread dealer_Thread=new Thread(new Dealer_Proxy(this, 0));
 		playerThreadList.add(dealer_Thread);
 		for(int i=0;i<numOfUser;i++){
-			Thread user_Thread=new Thread(new User_Proxy(i+1));
+			Thread user_Thread=new Thread(new User_Proxy(this, i+1));
 			playerThreadList.add(user_Thread);
 		}
 	}
 
 	public void startGame(int numOfUser, int numOfJoker, int minimalBet) {
 		gm = new Game_Model(numOfUser, numOfJoker, minimalBet);
+		this.observable=gm;
+		observable.addObserver(this);
 		for (int i = 0; i < 3; i++) {
 			giveCard(gm.getTable());
 		}
@@ -39,6 +45,7 @@ public class Game_Controller {
 			}
 		}
 		System.out.println(gm.getCardList().size());
+		giveTurn(0);
 
 	}
 
@@ -46,6 +53,7 @@ public class Game_Controller {
 		gm.getTable().setMoney(gm.getTable().getMoney() + money);
 		gm.getUserList().get(userNum)
 				.setMoney(gm.getUserList().get(userNum).getMoney() - money);
+		passTurn(userNum);
 	}
 
 	public void giveCard(Game_Set set) {
@@ -54,7 +62,7 @@ public class Game_Controller {
 	}
 
 	public void giveTurn(int userNum) {
-
+		((Proxy)playerThreadList.get(userNum)).getTurn();
 	}
 
 	public void calculateTurn() {
@@ -67,6 +75,12 @@ public class Game_Controller {
 
 	public void winPrize() {
 
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
