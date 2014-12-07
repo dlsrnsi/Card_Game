@@ -19,8 +19,7 @@ public class User extends Game_Set {
 	public void setState(boolean state) {
 		isAlive = state;
 	}
-
-	public void getTurn() {
-
+	public int getUserID(){
+		return userID;
 	}
 }

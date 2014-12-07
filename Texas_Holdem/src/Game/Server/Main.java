@@ -1,3 +1,4 @@
+package Game.Server;
 import Game.Game_Data.Game_Controller;
 import ServerClient.PerClientThread;
 
@@ -7,11 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Main {
-	static Game_Controller gc;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		gc = new Game_Controller();
+		Game_Controller gc = Game_Controller.getInstance();		
 		gc.startGame(3, 0, 0);
 		ServerSocket serverSocket = null;
 		try {
