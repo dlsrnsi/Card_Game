@@ -1,4 +1,5 @@
-package ServerClient;
+package Client;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +14,8 @@ public class ReceiverThread extends Thread {
 
 	public void run() {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					socket.getInputStream()));
 			while (true) {
 				String str = reader.readLine();
 				if (str == null) {

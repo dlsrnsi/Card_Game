@@ -12,6 +12,7 @@ public class Game_Model extends Observable {
 	private List cardList;
 	private List rankList;
 	private int curUser;
+	private int round;
 
 	public Game_Model(int numOfUser, int joker, int minimalBet) {
 		userList = new LinkedList();
@@ -38,14 +39,14 @@ public class Game_Model extends Observable {
 				cardList.add(ran);
 			}
 		}
+		round = 0;// Round는 0부터 시작한다;
 		table = new Table();
 		table.setMoney(0);// 테이블에서는 0원(베팅머니 없음)
 		int curUser = 0;// 게임이 시작할때 현재 유저는 0번째 유저이다(딜러)
 	}
 
-	public User distinguishWinner() {
-		User winner = new User(0);// 나중에 바꿉시다
-		return winner;
+	public int distinguishWinner() {
+		return 0;
 	}
 
 	public void calculateCardRank() {
@@ -141,34 +142,12 @@ public class Game_Model extends Observable {
 		}
 	}
 
-	public int findNextUser(int user) {
-		User nextUser;
-		if (userList.indexOf(user) > 2) {
-			for (int i = user; i < userList.size(); i++) {
-				try {
-					nextUser = getUser(i + 1);
-					if (nextUser.getState()) {
-						return userList.indexOf(nextUser);
-					}
-				} catch (Exception e) {
-					for (int j = 0; j < 2; j++) {
-						nextUser = getUser(j);
-						if (nextUser.getState()) {
-							return userList.indexOf(nextUser);
-						}
-					}
-				}
-			}
-		} else {
-			for (int j = userList.indexOf(user); j <= 2; j++) {
-				nextUser = getUser(j);
-				if (nextUser.getState()) {
-					return userList.indexOf(nextUser);
-				}
-			}
-		}
+	public int getRound() {
+		return round;
+	}
 
-		return (Integer) null;
+	public void setRound(int round) {
+		this.round = round;
 	}
 
 }

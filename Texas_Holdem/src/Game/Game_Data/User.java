@@ -8,6 +8,7 @@ public class User extends Game_Set {
 
 	public User(int userID) {
 		cardList = new LinkedList();
+		isAlive=true;
 		money = 0;
 		this.userID = userID;
 	}

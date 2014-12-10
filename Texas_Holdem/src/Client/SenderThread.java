@@ -1,4 +1,5 @@
-package ServerClient;
+package Client;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -15,7 +16,8 @@ public class SenderThread extends Thread {
 
 	public void run() {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					System.in));
 			PrintWriter writer = new PrintWriter(socket.getOutputStream());
 			writer.println(name);
 			writer.flush();
