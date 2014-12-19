@@ -32,11 +32,14 @@ public class Proxy_Manager {
 		Proxy proxy;
 		if(message.equals("Dealer")){
 			proxy=new Dealer_Proxy(socket, 0);
+			((Thread)proxy).start();
+			proxy.getTurn();
 		}
 		else{
 			proxy=new User_Proxy(socket, threadList.size());
+			((Thread)proxy).start();
 		}
-		((Thread)proxy).start();
+		
 		threadList.add((Thread) proxy);
 	}
 
