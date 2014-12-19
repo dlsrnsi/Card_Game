@@ -31,10 +31,10 @@ public class Proxy_Manager {
 	public void addProxy(String message, Socket socket) {
 		Proxy proxy;
 		if(message.equals("Dealer")){
-			proxy=new Dealer_Proxy(socket);
+			proxy=new Dealer_Proxy(socket, 0);
 		}
 		else{
-			proxy=new User_Proxy(socket);
+			proxy=new User_Proxy(socket, threadList.size());
 		}
 		((Thread)proxy).start();
 		threadList.add((Thread) proxy);

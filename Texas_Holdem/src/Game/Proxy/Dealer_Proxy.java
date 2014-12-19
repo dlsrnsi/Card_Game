@@ -15,15 +15,17 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	ReentrantLock lock;
 
 	PrintWriter writer;
+	int userNum;
 	int numOfJoker = 0;
 	int minimalBet = 1;
+	boolean check;
 
-	public Dealer_Proxy(Socket socket) {
+	public Dealer_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
 		pm = Proxy_Manager.getInstance();
 		lock = new ReentrantLock();
 		this.socket = socket;
-
+		this.userNum = userNum;
 		try {
 			writer = new PrintWriter(socket.getOutputStream());
 			pm.getList().add(writer);
@@ -72,47 +74,51 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	}
 
 	public void startGame(String name) {
+		lock.lock();
 		sendAll(name + " start game");
 		gc.startGame(pm.getCount(), 0, 0);
+		lock.unlock();
 	}
 
 	public void changeOption(int numOfJoker, int minimalBet) {
+		lock.lock();
 		this.numOfJoker = numOfJoker;
 		this.minimalBet = minimalBet;
+		lock.unlock();
 	}
 
 	@Override
 	public void call() {
-		// TODO Auto-generated method stub
+		gc.bet(userNum, gc.getMinimalBet());
+		gc.calculateTurn();
 		lock.unlock();
-
 	}
 
 	@Override
 	public void raise(int money) {
-		// TODO Auto-generated method stub
+		gc.setMinimalBet(gc.getMinimalBet()+money);
+		gc.bet(userNum,gc.getMinimalBet());
+		gc.calculateTurn();
 		lock.unlock();
-
 	}
 
 	@Override
 	public void die() {
-		// TODO Auto-generated method stub
+		gc.die(userNum);
+		gc.calculateTurn();
 		lock.unlock();
-
 	}
 
 	@Override
 	public void check() {
-		// TODO Auto-generated method stub
+		gc.calculateTurn();
 		lock.unlock();
-
 	}
+
 
 	@Override
 	public void exitgame() {
 		// TODO Auto-generated method stub
-		lock.unlock();
 	}
 
 	@Override
@@ -123,9 +129,9 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	}
 
 	@Override
-	public int getUserID() {
+	public int getUserNum() {
 		// TODO Auto-generated method stub
-		return 0;
+		return userNum;
 	}
 
 }

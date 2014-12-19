@@ -14,7 +14,7 @@ public class Game_Model extends Observable {
 	private int curUser;
 	private int round;
 
-	public Game_Model(int numOfUser, int joker, int minimalBet) {
+	public Game_Model(int numOfUser, int joker) {
 		userList = new LinkedList();
 		for (int i = 0; i < numOfUser; i++) {
 			User user = new User(i);

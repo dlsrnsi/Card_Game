@@ -7,5 +7,5 @@ public interface Proxy {
 	public void check();
 	public void exitgame();
 	public void getTurn();//Run
-	public int getUserID();
+	public int getUserNum();
 }

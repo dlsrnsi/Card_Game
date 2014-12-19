@@ -14,10 +14,13 @@ public class User_Proxy extends Thread implements Proxy {
 	ReentrantLock lock;
 	Socket socket;
 	PrintWriter writer;
+	private int userNum;
+	boolean check;
 
-	public User_Proxy(Socket socket) {
+	public User_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
 		this.socket = socket;
+		this.userNum = userNum;
 		pm = Proxy_Manager.getInstance();
 		lock = new ReentrantLock();
 
@@ -68,48 +71,50 @@ public class User_Proxy extends Thread implements Proxy {
 
 	@Override
 	public void call() {
-		// TODO Auto-generated method stub
+		gc.bet(userNum, gc.getMinimalBet());
 		lock.unlock();
 	}
 
 	@Override
 	public void raise(int money) {
-		// TODO Auto-generated method stub
+		gc.setMinimalBet(gc.getMinimalBet()+money);
+		gc.bet(userNum,gc.getMinimalBet());
+		gc.calculateTurn();
 		lock.unlock();
 
 	}
 
 	@Override
 	public void die() {
-		// TODO Auto-generated method stub
+		gc.die(userNum);
+		gc.calculateTurn();
 		lock.unlock();
 
 	}
 
 	@Override
 	public void check() {
-		// TODO Auto-generated method stub
+		gc.calculateTurn();
 		lock.unlock();
-
 	}
 
 	@Override
 	public void exitgame() {
 		// TODO Auto-generated method stub
+		die();
 		lock.unlock();
-
 	}
 
 	@Override
 	public void getTurn() {
-		// TODO Auto-generated method stub
 		lock.lock();
+		System.out.println("행동을 입력하세요");
 	}
 
 	@Override
-	public int getUserID() {
+	public int getUserNum() {
 		// TODO Auto-generated method stub
-		return 0;
+		return userNum;
 	}
 
 }

@@ -20,9 +20,9 @@ import Game.Proxy.User_Proxy;
 public class Game_Controller implements Observer {
 	private static Game_Controller gc;
 	Proxy_Manager pm;
-	private Game_Model gm;
-	private int numOfUser;
+	Game_Model gm;
 	private Observable observable;
+	private int minimalBet;
 
 	public static Game_Controller getInstance() {
 		if (gc == null) {
@@ -33,8 +33,9 @@ public class Game_Controller implements Observer {
 
 	public void startGame(int numOfUser, int numOfJoker, int minimalBet) {
 		pm = Proxy_Manager.getInstance();
-		gm = new Game_Model(numOfUser, numOfJoker, minimalBet);
+		gm = new Game_Model(numOfUser, numOfJoker);
 		this.observable = gm;
+		this.minimalBet = minimalBet;
 		observable.addObserver(this);
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < numOfUser; i++) {
@@ -51,7 +52,7 @@ public class Game_Controller implements Observer {
 		}
 		bet(1, minimalBet);
 		bet(2, minimalBet * 2);
-		gm.setCurUser(2);
+		gm.setCurUser(1);
 		calculateTurn();
 
 	}
@@ -60,7 +61,6 @@ public class Game_Controller implements Observer {
 		gm.getTable().setMoney(gm.getTable().getMoney() + money);
 		gm.getUser(userNum).setMoney(gm.getUser(userNum).getMoney() - money);
 		System.out.println("User" + userNum + "이 " + money + "만큼 베팅을 하였습니다");
-		passTurn(userNum);
 	}
 
 	public void giveCard(Game_Set set) {
@@ -72,17 +72,22 @@ public class Game_Controller implements Observer {
 	public void giveTurn(int userNum) {
 		gm.setCurUser(userNum);
 		if (gm.getUser(userNum).getState()) {
-			System.out.println("유저"+userNum+"의 턴입니다");
-			(pm.getProxy(userNum)).getTurn();
+			System.out.println("유저" + userNum + "의 턴입니다");
+			// (pm.getProxy(userNum)).getTurn();
+		} else {
+			calculateTurn();
 		}
-		calculateTurn();
+	}
+
+	public void die(int userNum) {
+		gm.getUser(userNum).setState(false);
 	}
 
 	public void calculateTurn() {
 		System.out.println("calTurn");
 		int curUser = gm.getCurUser();
 		curUser++;
-		if (curUser == numOfUser) {
+		if (curUser == gm.getUserList().size()) {
 			giveTurn(0);
 		} else if (curUser == 1) {
 			if (gm.getRound() == 3) {
@@ -104,15 +109,18 @@ public class Game_Controller implements Observer {
 
 	}
 
-	public void passTurn(int userNum) {
-		
-
-	}
-
 	public void winPrize(int winner) {
 		int money = gm.getTable().getMoney();
 		gm.getTable().setMoney(0);
 		gm.getUser(winner).setMoney(gm.getUser(winner).getMoney() + money);
+	}
+
+	public int getMinimalBet() {
+		return minimalBet;
+	}
+
+	public void setMinimalBet(int minimalBet) {
+		this.minimalBet = minimalBet;
 	}
 
 	@Override
@@ -120,4 +128,5 @@ public class Game_Controller implements Observer {
 		// TODO Auto-generated method stub
 
 	}
+
 }
