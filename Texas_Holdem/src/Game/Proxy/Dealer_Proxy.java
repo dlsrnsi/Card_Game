@@ -12,7 +12,6 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	Game_Controller gc;
 	Proxy_Manager pm;
 	Socket socket;
-	ReentrantLock lock;
 
 	PrintWriter writer;
 	int userNum;
@@ -23,7 +22,6 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	public Dealer_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
 		pm = Proxy_Manager.getInstance();
-		lock = new ReentrantLock();
 		this.socket = socket;
 		this.userNum = userNum;
 		try {
@@ -74,47 +72,46 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	}
 
 	public void startGame(String name) {
-		lock.lock();
+		gc.getLock().lock();
 		sendAll(name + " start game");
 		gc.startGame(pm.getCount(), 0, 0);
-		lock.unlock();
+		gc.getLock().unlock();
 	}
 
 	public void changeOption(int numOfJoker, int minimalBet) {
-		lock.lock();
+		gc.getLock().lock();
 		this.numOfJoker = numOfJoker;
 		this.minimalBet = minimalBet;
-		lock.unlock();
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void call() {
 		gc.bet(userNum, gc.getMinimalBet());
 		gc.calculateTurn();
-		lock.unlock();
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void raise(int money) {
-		gc.setMinimalBet(gc.getMinimalBet()+money);
-		gc.bet(userNum,gc.getMinimalBet());
+		gc.setMinimalBet(gc.getMinimalBet() + money);
+		gc.bet(userNum, gc.getMinimalBet());
 		gc.calculateTurn();
-		lock.unlock();
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void die() {
 		gc.die(userNum);
 		gc.calculateTurn();
-		lock.unlock();
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void check() {
 		gc.calculateTurn();
-		lock.unlock();
+		gc.getLock().unlock();
 	}
-
 
 	@Override
 	public void exitgame() {
@@ -124,7 +121,9 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	@Override
 	public void getTurn() {
 		// TODO Auto-generated method stub
-		lock.lock();
+		if (gc.getLock().isHeldByCurrentThread()) {
+			gc.getLock().lock();
+		}
 		System.out.println("행동을 입력하세요");
 	}
 

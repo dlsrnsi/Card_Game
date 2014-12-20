@@ -3,17 +3,14 @@ package Client;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import java.awt.BorderLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import java.awt.BorderLayout;
 import javax.swing.JPanel;
-import java.awt.GridLayout;
 import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Main_Window {
 
@@ -47,8 +44,30 @@ public class Main_Window {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 672, 428);
+		frame.setBounds(100, 100, 647, 439);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel = new JPanel();
+		frame.getContentPane().add(panel, BorderLayout.SOUTH);
+		
+		Component horizontalGlue_1 = Box.createHorizontalGlue();
+		panel.add(horizontalGlue_1);
+		
+		JButton btnCall = new JButton("Call");
+		panel.add(btnCall);
+		
+		JButton btnRaise = new JButton("Raise");
+		panel.add(btnRaise);
+		
+		JButton btnDie = new JButton("die");
+		panel.add(btnDie);
+		
+		JButton btnCheck = new JButton("Check");
+		panel.add(btnCheck);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		panel.add(horizontalGlue);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -58,30 +77,6 @@ public class Main_Window {
 		
 		JMenuItem mntmExitGame = new JMenuItem("Exit Game");
 		mnGame.add(mntmExitGame);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new GridLayout(1, 0, 0, 0));
-		
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		panel.add(horizontalStrut);
-		
-		JButton btnNewButton = new JButton("New button");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		panel.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("New button");
-		panel.add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("New button");
-		panel.add(btnNewButton_2);
-		
-		JButton btnNewButton_3 = new JButton("New button");
-		panel.add(btnNewButton_3);
 	}
 
 }

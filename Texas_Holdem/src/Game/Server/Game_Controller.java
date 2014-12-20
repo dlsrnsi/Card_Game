@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 import Game.Game_Data.Game_Model;
 import Game.Game_Data.Game_Set;
@@ -21,8 +23,8 @@ public class Game_Controller implements Observer {
 	private static Game_Controller gc;
 	Proxy_Manager pm;
 	Game_Model gm;
-	private Observable observable;
 	private int minimalBet;
+	private final ReentrantLock lock = new ReentrantLock();
 
 	public static Game_Controller getInstance() {
 		if (gc == null) {
@@ -34,13 +36,11 @@ public class Game_Controller implements Observer {
 	public void startGame(int numOfUser, int numOfJoker, int minimalBet) {
 		pm = Proxy_Manager.getInstance();
 		gm = new Game_Model(numOfUser, numOfJoker);
-		this.observable = gm;
 		this.minimalBet = minimalBet;
-		observable.addObserver(this);
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < numOfUser; i++) {
 				giveCard((User) gm.getUser(i));
-
+				
 				System.out.println(((User) gm.getUserList().get(i)).getClass()
 						.getName()
 						+ i
@@ -50,6 +50,7 @@ public class Game_Controller implements Observer {
 
 			}
 		}
+		gm.addObserver(this);
 		bet(1, minimalBet);
 		bet(2, minimalBet * 2);
 		gm.setCurUser(1);
@@ -73,7 +74,7 @@ public class Game_Controller implements Observer {
 		gm.setCurUser(userNum);
 		if (gm.getUser(userNum).getState()) {
 			System.out.println("유저" + userNum + "의 턴입니다");
-			// (pm.getProxy(userNum)).getTurn();
+			(pm.getProxy(userNum)).getTurn();
 		} else {
 			calculateTurn();
 		}
@@ -127,6 +128,10 @@ public class Game_Controller implements Observer {
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public ReentrantLock getLock() {
+		return lock;
 	}
 
 }

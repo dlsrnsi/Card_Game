@@ -11,7 +11,6 @@ import Game.Server.Game_Controller;
 public class User_Proxy extends Thread implements Proxy {
 	Game_Controller gc;
 	Proxy_Manager pm;
-	ReentrantLock lock;
 	Socket socket;
 	PrintWriter writer;
 	private int userNum;
@@ -22,7 +21,6 @@ public class User_Proxy extends Thread implements Proxy {
 		this.socket = socket;
 		this.userNum = userNum;
 		pm = Proxy_Manager.getInstance();
-		lock = new ReentrantLock();
 
 		try {
 			writer = new PrintWriter(socket.getOutputStream());
@@ -45,6 +43,9 @@ public class User_Proxy extends Thread implements Proxy {
 				String str = reader.readLine();
 				if (str == null) {
 					break;
+				}
+				else if(str.equals("Call")){
+					call();					
 				}
 
 				sendAll(name + ">" + str);
@@ -72,7 +73,8 @@ public class User_Proxy extends Thread implements Proxy {
 	@Override
 	public void call() {
 		gc.bet(userNum, gc.getMinimalBet());
-		lock.unlock();
+		gc.calculateTurn();
+		gc.getLock().unlock();
 	}
 
 	@Override
@@ -80,35 +82,35 @@ public class User_Proxy extends Thread implements Proxy {
 		gc.setMinimalBet(gc.getMinimalBet()+money);
 		gc.bet(userNum,gc.getMinimalBet());
 		gc.calculateTurn();
-		lock.unlock();
-
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void die() {
 		gc.die(userNum);
 		gc.calculateTurn();
-		lock.unlock();
-
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void check() {
 		gc.calculateTurn();
-		lock.unlock();
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void exitgame() {
 		// TODO Auto-generated method stub
 		die();
-		lock.unlock();
+		gc.getLock().unlock();
 	}
 
 	@Override
 	public void getTurn() {
-		lock.lock();
 		System.out.println("행동을 입력하세요");
+		if(gc.getLock().isHeldByCurrentThread()){
+			gc.getLock().lock();	
+		}
 	}
 
 	@Override
@@ -116,5 +118,4 @@ public class User_Proxy extends Thread implements Proxy {
 		// TODO Auto-generated method stub
 		return userNum;
 	}
-
 }
