@@ -11,8 +11,9 @@ public class Game_ControllerTest extends Game_Controller {
 	
 	
 	public void setUp(){
-		gm= new Game_Model(5,0);
+		gm= new Game_Model(5);
 		pm = Proxy_Manager.getInstance();
+		gm.setCurUser(2);
 	}
 	
 	public void tearDown(){
@@ -42,25 +43,27 @@ public class Game_ControllerTest extends Game_Controller {
 	public void testCalculateTurn() {
 		setUp();
 		calculateTurn();
-		assertEquals(1, gm.getCurUser());
-		assertEquals(1, gm.getRound());
-		assertEquals(3, gm.getTable().getCardList().size());
-		calculateTurn();
-		assertEquals(2, gm.getCurUser());
-		calculateTurn();
+		bet(0,100);
 		assertEquals(3, gm.getCurUser());
+		assertEquals(0, gm.getRound());
+		assertEquals(0, gm.getTable().getCardList().size());
 		calculateTurn();
 		assertEquals(4, gm.getCurUser());
 		calculateTurn();
 		assertEquals(0, gm.getCurUser());
-		gm.getUser(1).setState(false);
+		calculateTurn();
+		assertEquals(1, gm.getCurUser());
 		calculateTurn();
 		assertEquals(2, gm.getCurUser());
-		assertEquals(2, gm.getRound());
-		gm.getUser(3).setState(false);
-		gm.getUser(4).setState(false);
-		gm.getUser(0).setState(false);
+		assertEquals(3, gm.getTable().getCardList().size());
+		die(3);
 		calculateTurn();
+		assertEquals(4, gm.getCurUser());
+		die(0);
+		die(1);
+		die(2);
+		calculateTurn();
+		assertEquals(1100, gm.getUser(4).getMoney());
 	}
 
 	@Test

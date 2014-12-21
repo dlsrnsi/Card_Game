@@ -18,6 +18,7 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	int numOfJoker = 0;
 	int minimalBet = 1;
 	boolean check;
+	boolean isTurn;
 
 	public Dealer_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
@@ -72,65 +73,79 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	}
 
 	public void startGame(String name) {
-		gc.getLock().lock();
-		sendAll(name + " start game");
-		gc.startGame(pm.getCount(), 0, 0);
-		gc.getLock().unlock();
+		if(!gc.checkStarted()){
+			sendAll(name + " start game");
+			gc.startGame(pm.getCount(), 0);
+		}
 	}
 
 	public void changeOption(int numOfJoker, int minimalBet) {
-		gc.getLock().lock();
-		this.numOfJoker = numOfJoker;
-		this.minimalBet = minimalBet;
-		gc.getLock().unlock();
+		if(!gc.checkStarted()){
+			this.numOfJoker = numOfJoker;
+			this.minimalBet = minimalBet;
+		}
 	}
 
 	@Override
 	public void call() {
-		gc.bet(userNum, gc.getMinimalBet());
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn){
+			gc.bet(userNum, gc.getMinimalBet());
+			gc.calculateTurn();
+			this.isTurn = false;
+			this.check = false;
+		}
 	}
 
 	@Override
 	public void raise(int money) {
-		gc.setMinimalBet(gc.getMinimalBet() + money);
-		gc.bet(userNum, gc.getMinimalBet());
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn){
+			gc.setMinimalBet(gc.getMinimalBet() + money);
+			gc.bet(userNum, gc.getMinimalBet());
+			gc.calculateTurn();
+			this.isTurn = false;	
+			this.check = false;
+		}
+		
 	}
 
 	@Override
 	public void die() {
-		gc.die(userNum);
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn){
+			gc.die(userNum);
+			gc.calculateTurn();
+			this.isTurn = false;	
+			this.check = false;
+		}
+		
 	}
 
 	@Override
 	public void check() {
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn){
+			gc.calculateTurn();
+			this.isTurn = false;
+			this.check = false;
+		}
 	}
 
 	@Override
 	public void exitgame() {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void getTurn() {
-		// TODO Auto-generated method stub
-		if (gc.getLock().isHeldByCurrentThread()) {
-			gc.getLock().lock();
-		}
 		System.out.println("행동을 입력하세요");
+		this.isTurn = true;
 	}
-
+	
 	@Override
 	public int getUserNum() {
 		// TODO Auto-generated method stub
 		return userNum;
+	}
+	public void setCheck() {
+		this.check = true;
 	}
 
 }

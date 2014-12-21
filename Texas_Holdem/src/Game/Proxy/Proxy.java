@@ -8,4 +8,5 @@ public interface Proxy {
 	public void exitgame();
 	public void getTurn();//Run
 	public int getUserNum();
+	public void setCheck();
 }

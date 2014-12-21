@@ -10,11 +10,12 @@ public class Game_Model extends Observable {
 	private List<User> userList;
 	private Table table;
 	private List cardList;
-	private List rankList;
 	private int curUser;
 	private int round;
+	List cardListForRank;
+	
 
-	public Game_Model(int numOfUser, int joker) {
+	public Game_Model(int numOfUser) {
 		userList = new LinkedList();
 		for (int i = 0; i < numOfUser; i++) {
 			User user = new User(i);
@@ -26,8 +27,8 @@ public class Game_Model extends Observable {
 		int ran = 0;
 		boolean check;
 		cardList = new LinkedList<>();
-		for (int i = 0; i < 52 + joker; i++) {
-			ran = r.nextInt(52 + joker) + 1;
+		for (int i = 0; i < 52 ; i++) {
+			ran = r.nextInt(52) + 1;
 			check = true;
 			for (int j = 0; j < i; j++) {
 				if ((int) cardList.get(j) == ran) {
@@ -46,22 +47,31 @@ public class Game_Model extends Observable {
 	}
 
 	public int distinguishWinner() {
-		return 0;
+		int tempMax = 0;
+		int tempMaxUser=0;
+		for(int i = 0 ; i < userList.size() ; i ++){
+			User user = getUser(i);
+			if(user.getState()){
+				int userRank = calculateCardRank(i);
+				if(userRank>tempMax){
+					tempMax=userRank;
+					tempMaxUser = i;
+				}
+			}
+		}
+		
+		return tempMaxUser;
 	}
 
-	public void calculateCardRank() {
-		List cardListForRank;
-		List tableCardList = table.getCardList();
-		List userCardList;
-		for (int i = 0; i < userList.size(); i++) {
-			userCardList = userList.get(i).getCardList();
-			cardListForRank = new LinkedList();
-			cardListForRank.addAll(tableCardList);
-			cardListForRank.addAll(userCardList);
-			cardListForRank.sort(null);
-
+	public int calculateCardRank(int userNum) {
+		cardListForRank = new LinkedList();
+		cardListForRank.addAll(table.getCardList());
+		cardListForRank.addAll(getUser(userNum).getCardList());
+		int [] rank = new int[7];
+		for(int j = 0; j < cardListForRank.size() ; j++){
+			rank[j] = (int) cardListForRank.get(j);
 		}
-
+		return HandEvaluator.defineHand(rank);
 	}
 
 	public int getCurUser() {

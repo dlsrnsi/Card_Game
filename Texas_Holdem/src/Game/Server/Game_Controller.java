@@ -1,9 +1,5 @@
 package Game.Server;
 
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -24,7 +20,8 @@ public class Game_Controller implements Observer {
 	Proxy_Manager pm;
 	Game_Model gm;
 	private int minimalBet;
-	private final ReentrantLock lock = new ReentrantLock();
+	private boolean check;
+	private boolean isStarted;
 
 	public static Game_Controller getInstance() {
 		if (gc == null) {
@@ -33,14 +30,16 @@ public class Game_Controller implements Observer {
 		return gc;
 	}
 
-	public void startGame(int numOfUser, int numOfJoker, int minimalBet) {
+	public void startGame(int numOfUser, int minimalBet) {
+		this.check = false;
+		this.isStarted = true;
 		pm = Proxy_Manager.getInstance();
-		gm = new Game_Model(numOfUser, numOfJoker);
+		gm = new Game_Model(numOfUser);
 		this.minimalBet = minimalBet;
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < numOfUser; i++) {
 				giveCard((User) gm.getUser(i));
-				
+
 				System.out.println(((User) gm.getUserList().get(i)).getClass()
 						.getName()
 						+ i
@@ -74,7 +73,11 @@ public class Game_Controller implements Observer {
 		gm.setCurUser(userNum);
 		if (gm.getUser(userNum).getState()) {
 			System.out.println("유저" + userNum + "의 턴입니다");
-			(pm.getProxy(userNum)).getTurn();
+			if(check){
+				//(pm.getProxy(userNum)).setCheck();
+				this.check = false;
+			}
+			//(pm.getProxy(userNum)).getTurn();
 		} else {
 			calculateTurn();
 		}
@@ -85,29 +88,44 @@ public class Game_Controller implements Observer {
 	}
 
 	public void calculateTurn() {
-		System.out.println("calTurn");
-		int curUser = gm.getCurUser();
-		curUser++;
-		if (curUser == gm.getUserList().size()) {
-			giveTurn(0);
-		} else if (curUser == 1) {
-			if (gm.getRound() == 3) {
-				winPrize(gm.distinguishWinner());
-			} else if (gm.getRound() == 0) {
-				gm.setRound(gm.getRound() + 1);
-				for (int j = 0; j < 3; j++) {
+		int livingUser = 0;
+		int maybeWinner = 0;
+		for(int i = 0 ; i < gm.getUserList().size(); i++){
+			if(gm.getUser(i).getState()){
+				livingUser++;
+				maybeWinner = i;
+			}
+		}
+		if(livingUser==1){
+			winPrize(maybeWinner);
+			System.out.println(maybeWinner+"가 이겼습니다");
+		}
+		else{
+			System.out.println("calTurn");
+			int curUser = gm.getCurUser();
+			curUser++;
+			if (curUser == gm.getUserList().size()) {
+				giveTurn(0);
+			} else if (curUser == 2) {
+				if (gm.getRound() == 3) {
+					winPrize(gm.distinguishWinner());
+				} else if (gm.getRound() == 0) {
+					gm.setRound(gm.getRound() + 1);
+					for (int j = 0; j < 3; j++) {
+						giveCard(gm.getTable());
+					}
+					this.check = true;
+					giveTurn(curUser);
+				} else {
+					gm.setRound(gm.getRound() + 1);
 					giveCard(gm.getTable());
+					giveTurn(curUser);
+					this.check = true;
 				}
-				giveTurn(curUser);
 			} else {
-				gm.setRound(gm.getRound() + 1);
-				giveCard(gm.getTable());
 				giveTurn(curUser);
 			}
-		} else {
-			giveTurn(curUser);
 		}
-
 	}
 
 	public void winPrize(int winner) {
@@ -123,15 +141,14 @@ public class Game_Controller implements Observer {
 	public void setMinimalBet(int minimalBet) {
 		this.minimalBet = minimalBet;
 	}
+	public boolean checkStarted(){
+		return isStarted;
+	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public ReentrantLock getLock() {
-		return lock;
 	}
 
 }

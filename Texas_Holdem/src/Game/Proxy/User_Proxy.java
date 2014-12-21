@@ -15,6 +15,7 @@ public class User_Proxy extends Thread implements Proxy {
 	PrintWriter writer;
 	private int userNum;
 	boolean check;
+	boolean isTurn;
 
 	public User_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
@@ -43,9 +44,8 @@ public class User_Proxy extends Thread implements Proxy {
 				String str = reader.readLine();
 				if (str == null) {
 					break;
-				}
-				else if(str.equals("Call")){
-					call();					
+				} else if (str.equals("Call")) {
+					call();
 				}
 
 				sendAll(name + ">" + str);
@@ -72,50 +72,64 @@ public class User_Proxy extends Thread implements Proxy {
 
 	@Override
 	public void call() {
-		gc.bet(userNum, gc.getMinimalBet());
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn){
+			gc.bet(userNum, gc.getMinimalBet());
+			gc.calculateTurn();
+			this.isTurn = false;
+			this.check = false;
+		}
 	}
 
 	@Override
 	public void raise(int money) {
-		gc.setMinimalBet(gc.getMinimalBet()+money);
-		gc.bet(userNum,gc.getMinimalBet());
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn){
+			gc.setMinimalBet(gc.getMinimalBet() + money);
+			gc.bet(userNum, gc.getMinimalBet());
+			gc.calculateTurn();
+			this.isTurn = false;
+			this.check = false;
+		}
+		
 	}
 
 	@Override
 	public void die() {
-		gc.die(userNum);
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn){
+			gc.die(userNum);
+			gc.calculateTurn();
+			this.isTurn = false;
+			this.check = false;
+		}
+		
 	}
 
 	@Override
 	public void check() {
-		gc.calculateTurn();
-		gc.getLock().unlock();
+		if(isTurn&&check){
+			gc.calculateTurn();
+			this.isTurn = false;
+			this.check = false;
+		}
 	}
 
 	@Override
 	public void exitgame() {
-		// TODO Auto-generated method stub
-		die();
-		gc.getLock().unlock();
+		
 	}
 
 	@Override
 	public void getTurn() {
 		System.out.println("행동을 입력하세요");
-		if(gc.getLock().isHeldByCurrentThread()){
-			gc.getLock().lock();	
-		}
+		this.isTurn = true;
 	}
 
 	@Override
 	public int getUserNum() {
 		// TODO Auto-generated method stub
 		return userNum;
+	}
+	
+	public void setCheck() {
+		this.check = true;
 	}
 }
