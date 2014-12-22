@@ -21,17 +21,17 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 
 	PrintWriter writer;
 	int userNum;
-	int numOfJoker = 0;
-	int minimalBet = 1;
+	int minimalBet;
 	boolean check;
 	boolean isTurn;
 	String userName;
-	
+
 	public Dealer_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
 		pm = Proxy_Manager.getInstance();
 		this.socket = socket;
 		this.userNum = userNum;
+		isTurn = false;
 		try {
 			writer = new PrintWriter(socket.getOutputStream());
 			pm.getList().add(writer);
@@ -49,13 +49,31 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 			sendAll("#" + userName + " is Joined/" + pm.getCount());
 
 			while (true) {
-				String str = reader.readLine();
-				if (str == null) {
-					break;
-				} else if (str.equals("StartGame") == true)
-					startGame(userName);
+				if (pm.getProxy(userNum).getUserNum()==userNum) {
+					String string = reader.readLine();
+					String str = string.split("/")[0];
+					System.out.println("str은" + str);
+					if (str == null) {
+						break;
+					} else if (str.equals("StartGame")) {
+						System.out.println(str);
+						startGame();
+					} else if (str.equals("Call")) {
+						call();
+					} else if (str.equals("Raise")) {
+						String str2 = string.split("/")[1];
+						raise(Integer.parseInt(str2));
+					} else if (str.equals("Die")) {
+						die();
+					} else if (str.equals("Check")) {
+						check();
+					} else if (str.equals("ChangeOption")) {
+						String str2 = string.split("/")[1];
+						changeOption(Integer.parseInt(str2));
+					}
 
-				sendAll(userName + ">" + str);
+					sendAll(userName + ">" + str);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -77,23 +95,21 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 		}
 	}
 
-	public void startGame(String name) {
-		if(!gc.checkStarted()){
-			sendAll(name + " start game");
-			gc.startGame(pm.getCount(), 0);
+	public void startGame() {
+		if (!gc.checkStarted()) {
+			gc.startGame(pm.getCount(), 10);
 		}
 	}
 
-	public void changeOption(int numOfJoker, int minimalBet) {
-		if(!gc.checkStarted()){
-			this.numOfJoker = numOfJoker;
+	public void changeOption(int minimalBet) {
+		if (!gc.checkStarted()) {
 			this.minimalBet = minimalBet;
 		}
 	}
 
 	@Override
 	public void call() {
-		if(isTurn){
+		if (isTurn) {
 			gc.bet(userNum, gc.getMinimalBet());
 			gc.calculateTurn();
 			this.isTurn = false;
@@ -103,30 +119,30 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 
 	@Override
 	public void raise(int money) {
-		if(isTurn){
+		if (isTurn) {
 			gc.setMinimalBet(gc.getMinimalBet() + money);
 			gc.bet(userNum, gc.getMinimalBet());
 			gc.calculateTurn();
-			this.isTurn = false;	
+			this.isTurn = false;
 			this.check = false;
 		}
-		
+
 	}
 
 	@Override
 	public void die() {
-		if(isTurn){
+		if (isTurn) {
 			gc.die(userNum);
 			gc.calculateTurn();
-			this.isTurn = false;	
+			this.isTurn = false;
 			this.check = false;
 		}
-		
+
 	}
 
 	@Override
 	public void check() {
-		if(isTurn){
+		if (isTurn) {
 			gc.calculateTurn();
 			this.isTurn = false;
 			this.check = false;
@@ -135,8 +151,9 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 
 	@Override
 	public void exitgame() {
-		
-		
+		gc.die(userNum);
+		this.isTurn = false;
+		this.check = false;
 	}
 
 	@Override
@@ -144,57 +161,61 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 		System.out.println("행동을 입력하세요");
 		this.isTurn = true;
 	}
-	
+
 	@Override
 	public int getUserNum() {
 		// TODO Auto-generated method stub
 		return userNum;
 	}
+
 	public void setCheck() {
 		this.check = true;
 	}
 
 	@Override
 	public void userCardUpdate(int userNum, int card) {
-		String str= "userCard/"+String.valueOf(userNum)+"/"+String.valueOf(card);
+		String str = "userCard/" + String.valueOf(userNum) + "/"
+				+ String.valueOf(card);
 		sendAll(str);
-		System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllll");
 	}
 
 	@Override
 	public void userStateUpdate(int userNum, boolean state) {
-		String str= "userState/"+String.valueOf(userNum)+"/"+String.valueOf(state);
+		String str = "userState/" + String.valueOf(userNum) + "/"
+				+ String.valueOf(state);
 		sendAll(str);
 	}
 
 	@Override
 	public void userMoneyUpdate(int userNum, int money) {
-		String str= "userMoney/"+String.valueOf(userNum)+"/"+String.valueOf(money);
+		String str = "userMoney/" + String.valueOf(userNum) + "/"
+				+ String.valueOf(money);
 		sendAll(str);
 	}
 
 	@Override
 	public void tableCardUpdate(int card) {
-		String str= "tableCard/"+String.valueOf(card);
-		sendAll(str);	
-	}
-
-	@Override
-	public void tableMoneyUpdate(int money) {
-		String str= "tableMoney/"+String.valueOf(money);
+		String str = "tableCard/" + String.valueOf(card);
 		sendAll(str);
 	}
 
 	@Override
-	public void userNameUpdate(int userNum, String userName){
-
-		String str= "userName/"+String.valueOf(userNum)+"/"+userName;
-		System.out.println(str);
-		sendAll(str);	
+	public void tableMoneyUpdate(int money) {
+		String str = "tableMoney/" + String.valueOf(money);
+		sendAll(str);
 	}
+
+	@Override
+	public void userNameUpdate(int userNum, String userName) {
+
+		String str = "userName/" + String.valueOf(userNum) + "/" + userName;
+		System.out.println(str);
+		sendAll(str);
+	}
+
 	@Override
 	public String getUserName() {
 		return userName;
-		
+
 	}
 }

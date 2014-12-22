@@ -28,6 +28,7 @@ public class User_Proxy extends Thread implements Proxy, GameObserver{
 		gc = Game_Controller.getInstance();
 		this.userName = userName;
 		this.socket = socket;
+		this.isTurn = false;
 		pm = Proxy_Manager.getInstance();
 		try {
 			writer = new PrintWriter(socket.getOutputStream());
@@ -43,23 +44,34 @@ public class User_Proxy extends Thread implements Proxy, GameObserver{
 					socket.getInputStream()));
 			userName = reader.readLine();
 			pm.setCount(pm.getCount() + 1);
-			sendAll("#" + userName + " is Joined" + pm.getCount());
+			sendAll("#" + userName + " is Joined/" + pm.getCount());
 
 			while (true) {
-				String str = reader.readLine();
-				if (str == null) {
-					break;
-				} else if (str.equals("Call")) {
-					call();
-				}
+				if (pm.getProxy(userNum).getUserNum()==userNum) {
+					String string = reader.readLine();
+					String str = string.split("/")[0];
+					System.out.println("strÀº" + str);
+					if (str == null) {
+						break;
+					} else if (str.equals("Call")) {
+						call();
+					} else if (str.equals("Raise")) {
+						String str2 = string.split("/")[1];
+						raise(Integer.parseInt(str2));
+					} else if (str.equals("Die")) {
+						die();
+					} else if (str.equals("Check")) {
+						check();
+					} 
 
-				sendAll(userName + ">" + str);
+					sendAll(userName + ">" + str);
+				}
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			pm.getList().remove(writer);
-			sendAll("#" + userName + " is out");
+			sendAll("#" + userName + " is out/");
 			pm.setCount(pm.getCount() - 1);
 			try {
 				socket.close();

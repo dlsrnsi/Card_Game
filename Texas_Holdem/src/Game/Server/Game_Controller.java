@@ -37,11 +37,17 @@ public class Game_Controller{
 		pm = Proxy_Manager.getInstance();
 		gm = new Game_Model(numOfUser);
 		for(int i = 0 ; i < numOfUser ; i ++){
+			User user= gm.getUser(i);
 			for(int j = 0 ; j <numOfUser; j++){
-				gm.getUser(i).registObserver((GameObserver) pm.getProxy(j));
+				user.registObserver((GameObserver) pm.getProxy(j));
 			}
+			user.setUserName(Proxy_Manager.getInstance().getProxy(i).getUserName());
+			user.setState(true);
+			user.setMoney(1000);//유저는 1000원을 가지고 시작한다
 			gm.getTable().registObserver((GameObserver) pm.getProxy(i));
 		}
+		
+		
 		this.minimalBet = minimalBet;
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < numOfUser; i++) {

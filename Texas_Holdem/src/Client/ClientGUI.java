@@ -17,132 +17,179 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 public class ClientGUI {
-	
-	 final JPanel panel_Textplay = new JPanel();
-	 JMenuItem mntmStart;
-	 JMenuItem mntmOption;
-	 JMenuItem mntmExit;
-	 JMenuItem mntmInformation;
-	 List<JTextArea> card1List;
-	 JTextArea Player1_Card1;
-	 JTextArea Player2_Card1;
-	 JTextArea Player3_Card1;
-	 JTextArea Player4_Card1;
-	 JTextArea Player5_Card1;
-	 JTextArea Player6_Card1;
-	 List<JTextArea> card2List;
-	 JTextArea Player1_Card2;
-	 JTextArea Player2_Card2;
-	 JTextArea Player3_Card2;
-	 JTextArea Player4_Card2;
-	 JTextArea Player5_Card2;
-	 JTextArea Player6_Card2;
-	 JTextArea TableCard1;
-	 JTextArea TableCard2;
-	 JTextArea TableCard3;
-	 JTextArea TableCard4;
-	 JTextArea TableCard5;
-	 JTextArea StateText;
-	 List<JLabel> playerStatusList;
-	 JLabel PlayerStatus1;
-	 JLabel PlayerStatus2;
-	 JLabel PlayerStatus3;
-	 JLabel PlayerStatus4;
-	 JLabel PlayerStatus5;
-	 JLabel PlayerStatus6;
-	 List<JLabel> playerNameList;
-	 JLabel PlayerName1;
-	 JLabel PlayerName2;
-	 JLabel PlayerName3;
-	 JLabel PlayerName4;
-	 JLabel PlayerName5;
-	 JLabel PlayerName6;
-	 JLabel TableStatus;
-	
 
-	public void setframe(String str){
+	final JPanel panel_Textplay = new JPanel();
+	JMenuItem mntmStart;
+	JMenuItem mntmOption;
+	JMenuItem mntmExit;
+	JMenuItem mntmInformation;
+	List<JTextArea> card1List;
+	JTextArea Player1_Card1;
+	JTextArea Player2_Card1;
+	JTextArea Player3_Card1;
+	JTextArea Player4_Card1;
+	JTextArea Player5_Card1;
+	JTextArea Player6_Card1;
+	List<JTextArea> card2List;
+	JTextArea Player1_Card2;
+	JTextArea Player2_Card2;
+	JTextArea Player3_Card2;
+	JTextArea Player4_Card2;
+	JTextArea Player5_Card2;
+	JTextArea Player6_Card2;
+	JTextArea TableCard1;
+	JTextArea TableCard2;
+	JTextArea TableCard3;
+	JTextArea TableCard4;
+	JTextArea TableCard5;
+	JTextArea StateText;
+	List<JLabel> playerStatusList;
+	JLabel PlayerStatus1;
+	JLabel PlayerStatus2;
+	JLabel PlayerStatus3;
+	JLabel PlayerStatus4;
+	JLabel PlayerStatus5;
+	JLabel PlayerStatus6;
+	List<JLabel> playerNameList;
+	JLabel PlayerName1;
+	JLabel PlayerName2;
+	JLabel PlayerName3;
+	JLabel PlayerName4;
+	JLabel PlayerName5;
+	JLabel PlayerName6;
+	JLabel TableStatus;
+
+	/**
+	 * @wbp.parser.entryPoint
+	 */
+	public void setframe(String str) {
 		String name = str.split(" is")[0];
 		StateText.setText(StateText.getText() + str + "\n");
-		if(PlayerName1.getText().equals(""))		PlayerName1.setText(name);
-		else if(PlayerName2.getText().equals(""))	PlayerName2.setText(name);
-		else if(PlayerName3.getText().equals(""))	PlayerName3.setText(name);
-		else if(PlayerName4.getText().equals(""))	PlayerName4.setText(name);
-		else if(PlayerName5.getText().equals(""))	PlayerName5.setText(name);
-		else if(PlayerName6.getText().equals(""))	PlayerName6.setText(name);
+		if (PlayerName1.getText().equals(""))
+			PlayerName1.setText(name);
+		else if (PlayerName2.getText().equals(""))
+			PlayerName2.setText(name);
+		else if (PlayerName3.getText().equals(""))
+			PlayerName3.setText(name);
+		else if (PlayerName4.getText().equals(""))
+			PlayerName4.setText(name);
+		else if (PlayerName5.getText().equals(""))
+			PlayerName5.setText(name);
+		else if (PlayerName6.getText().equals(""))
+			PlayerName6.setText(name);
 	}
-	public String getShape(int card){
-		switch(card%4){
-		case 0 : return "Clover";
-		case 1 : return "Diamond";
-		case 2 : return "Spade";
-		case 3 : return "Heart";
-		default : return "";
+
+	public String getShape(int card) {
+		switch (card % 4) {
+		case 0:
+			return "Clover";
+		case 1:
+			return "Diamond";
+		case 2:
+			return "Spade";
+		case 3:
+			return "Heart";
+		default:
+			return "";
 		}
 	}
-	public String getNumber(int card){
-		switch(card/4){
-		case 0 : return "2";
-		case 1 : return "3";
-		case 2 : return "4";
-		case 3 : return "5";
-		case 4 : return "6";
-		case 5 : return "7";
-		case 6 : return "8";
-		case 7 : return "9";
-		case 8 : return "10";
-		case 9 : return "J";
-		case 10 : return "Q";
-		case 11 : return "K";
-		case 12 : return "A";
-		default : return "";	
-		
+
+	public String getNumber(int card) {
+		switch (card / 4) {
+		case 0:
+			return "2";
+		case 1:
+			return "3";
+		case 2:
+			return "4";
+		case 3:
+			return "5";
+		case 4:
+			return "6";
+		case 5:
+			return "7";
+		case 6:
+			return "8";
+		case 7:
+			return "9";
+		case 8:
+			return "10";
+		case 9:
+			return "J";
+		case 10:
+			return "Q";
+		case 11:
+			return "K";
+		case 12:
+			return "A";
+		default:
+			return "";
+
 		}
 	}
-	//userCard/userNum/card
+
+	// userCard/userNum/card
 	public void setframeUserCard(String str) {
 		int userNum = Integer.parseInt(str.split("/")[1]);
 		int card = Integer.parseInt(str.split("/")[2]);
-		if(card1List.get(userNum).getText().equals(""))
-			card1List.get(userNum).setText(getShape(card)+"_"+getNumber(card));
-		else	card2List.get(userNum).setText(getShape(card)+"_"+getNumber(card));
+		if (card1List.get(userNum).getText().equals(""))
+			card1List.get(userNum).setText(
+					getShape(card) + "_" + getNumber(card));
+		else
+			card2List.get(userNum).setText(
+					getShape(card) + "_" + getNumber(card));
 	}
+
 	public void setframeUserState(String str) {
 		String userNum = str.split("/")[1];
 		String state = str.split("/")[2];
-		playerStatusList.get(Integer.parseInt(userNum)).setText("State : " + state);
+		playerStatusList.get(Integer.parseInt(userNum)).setText(
+				"State : " + state);
 	}
+
 	public void setframeUserMoney(String str) {
 		String userNum = str.split("/")[1];
 		String money = str.split("/")[2];
-		playerStatusList.get(Integer.parseInt(userNum)).setText("Money : " + money);
+		playerStatusList.get(Integer.parseInt(userNum)).setText(
+				"Money : " + money);
 	}
+
 	public void setframetableCard(String str) {
-		if(TableCard1.getText().equals(null))		TableCard1.setText(str.split("/")[1]);
-		else if(TableCard2.getText().equals(null))	TableCard2.setText(str.split("/")[1]);
-		else if(TableCard3.getText().equals(null))	TableCard3.setText(str.split("/")[1]);
-		else if(TableCard4.getText().equals(null))	TableCard4.setText(str.split("/")[1]);
-		else if(TableCard5.getText().equals(null))	TableCard5.setText(str.split("/")[1]);
+		if (TableCard1.getText().equals(null))
+			TableCard1.setText(str.split("/")[1]);
+		else if (TableCard2.getText().equals(null))
+			TableCard2.setText(str.split("/")[1]);
+		else if (TableCard3.getText().equals(null))
+			TableCard3.setText(str.split("/")[1]);
+		else if (TableCard4.getText().equals(null))
+			TableCard4.setText(str.split("/")[1]);
+		else if (TableCard5.getText().equals(null))
+			TableCard5.setText(str.split("/")[1]);
 	}
+
 	public void setframetableMoney(String str) {
 		String money = str.split("/")[1];
 		TableStatus.setText("Money : " + money);
 	}
-	
+
 	public void setfrmeuserName(String str) {
 		String userNum = str.split("/")[1];
 		String name = str.split("/")[2];
 		playerStatusList.get(Integer.parseInt(userNum)).setText(name);
-		
+
 	}
+
 	public void Myframe(Thread thread) {
 		JFrame frame = new JFrame();
 		frame.setVisible(true);
 		frame.setBounds(100, 100, 933, 575);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
 
@@ -153,7 +200,7 @@ public class ClientGUI {
 		mntmStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					((SenderThread) thread).setstr("StartGame");
+					((SenderThread) thread).setstr("StartGame/");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -164,7 +211,40 @@ public class ClientGUI {
 
 		mntmOption = new JMenuItem("Option");
 		mnGame.add(mntmOption);
-				
+		mntmOption.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				JFrame frame1 = new JFrame();
+				JPanel contentPane;
+				JTextField textField;
+				frame1.setTitle("Change Minimal Bet");
+				frame1.setBounds(100, 100, 300, 89);
+				frame1.setVisible(true);
+				contentPane = new JPanel();
+				contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+				frame1.setContentPane(contentPane);
+				contentPane.setLayout(new BorderLayout(0, 0));
+				textField = new JTextField();
+				contentPane.add(textField, BorderLayout.CENTER);
+				textField.setColumns(10);
+				JButton button = new JButton("\uD655\uC778");
+				button.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						int minimalBet = Integer.parseInt(textField.getText());
+						try {
+							((SenderThread) thread).setstr("ChangeOption/"
+									+ minimalBet);
+							frame1.dispose();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+				contentPane.add(button, BorderLayout.EAST);
+
+			}
+		});
 		JMenuItem mntmExit = new JMenuItem("Exit");
 		mnGame.add(mntmExit);
 
@@ -469,7 +549,7 @@ public class ClientGUI {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					((SenderThread) thread).setstr("Call");
+					((SenderThread) thread).setstr("Call/");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -481,12 +561,33 @@ public class ClientGUI {
 		JButton btnNewButton_1 = new JButton("Raise");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					((SenderThread) thread).setstr("Raise");
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				JFrame frame1 = new JFrame();
+				JPanel contentPane;
+				JTextField textField;
+				frame1.setTitle("Write increasing money");
+				frame1.setBounds(100, 100, 300, 89);
+				frame1.setVisible(true);
+				contentPane = new JPanel();
+				contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+				frame1.setContentPane(contentPane);
+				contentPane.setLayout(new BorderLayout(0, 0));
+				textField = new JTextField();
+				contentPane.add(textField, BorderLayout.CENTER);
+				textField.setColumns(10);
+				JButton button = new JButton("\uD655\uC778");
+				button.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						int money = Integer.parseInt(textField.getText());
+						try {
+							((SenderThread) thread).setstr("Raise/" + money);
+							frame1.dispose();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+				contentPane.add(button, BorderLayout.EAST);
 			}
 		});
 		panel_Select.add(btnNewButton_1);
@@ -495,7 +596,7 @@ public class ClientGUI {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					((SenderThread) thread).setstr("Check");
+					((SenderThread) thread).setstr("Check/");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -508,7 +609,7 @@ public class ClientGUI {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					((SenderThread) thread).setstr("Die");
+					((SenderThread) thread).setstr("Die/");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -538,15 +639,15 @@ public class ClientGUI {
 
 		PlayerStatus1 = new JLabel();
 		panel_3.add(PlayerStatus1);
-		
-		card1List=new ArrayList();
+
+		card1List = new ArrayList();
 		card1List.add(Player1_Card1);
 		card1List.add(Player2_Card1);
 		card1List.add(Player3_Card1);
 		card1List.add(Player4_Card1);
 		card1List.add(Player5_Card1);
 		card1List.add(Player6_Card1);
-		card2List=new ArrayList();
+		card2List = new ArrayList();
 		card2List.add(Player1_Card2);
 		card2List.add(Player2_Card2);
 		card2List.add(Player3_Card2);
@@ -560,12 +661,13 @@ public class ClientGUI {
 		playerStatusList.add(PlayerStatus4);
 		playerStatusList.add(PlayerStatus5);
 		playerStatusList.add(PlayerStatus6);
-		playerNameList=new ArrayList();
+		playerNameList = new ArrayList();
 		playerNameList.add(PlayerName1);
 		playerNameList.add(PlayerName2);
 		playerNameList.add(PlayerName3);
 		playerNameList.add(PlayerName4);
 		playerNameList.add(PlayerName5);
 		playerNameList.add(PlayerName6);
+
 	}
 }

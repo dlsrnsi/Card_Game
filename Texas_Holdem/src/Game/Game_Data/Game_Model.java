@@ -21,10 +21,6 @@ public class Game_Model {
 		userList = new LinkedList();
 		for (int i = 0; i < numOfUser; i++) {
 			User user = new User(i);
-			user.setState(true);
-			user.setMoney(1000);//유저는 1000원을 가지고 시작한다
-			user.setUserName(Proxy_Manager.getInstance().getProxy(i).getUserName());
-			
 			System.out.println("유저" + i + "가 생성되었습니다");
 			userList.add(user);
 		}
