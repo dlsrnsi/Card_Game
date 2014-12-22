@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Random;
 
-public class Game_Model extends Observable {
+import Game.Proxy.Proxy_Manager;
+
+public class Game_Model {
 	private List<User> userList;
 	private Table table;
 	private List cardList;
@@ -19,7 +21,10 @@ public class Game_Model extends Observable {
 		userList = new LinkedList();
 		for (int i = 0; i < numOfUser; i++) {
 			User user = new User(i);
-			user.setMoney(1000);// 유저는 1000원을 가지고 시작한다
+			user.setState(true);
+			user.setMoney(1000);//유저는 1000원을 가지고 시작한다
+			user.setUserName(Proxy_Manager.getInstance().getProxy(i).getUserName());
+			
 			System.out.println("유저" + i + "가 생성되었습니다");
 			userList.add(user);
 		}
@@ -100,56 +105,6 @@ public class Game_Model extends Observable {
 
 	public void notifyObserver() {
 
-	}
-
-	public String getShape(int card) {
-		switch (card / 13) {
-		case (0):
-			return "Spade";
-		case (1):
-			return "Heart";
-		case (2):
-			return "Clover";
-		case (3):
-			return "Diamond";
-		case (4):
-			return "Joker";
-		default:
-			return null;
-		}
-	}
-
-	public String getNumber(int card) {
-		switch (card % 13) {
-		case (0):
-			return "A";
-		case (1):
-			return "2";
-		case (2):
-			return "3";
-		case (3):
-			return "4";
-		case (4):
-			return "5";
-		case (5):
-			return "6";
-		case (6):
-			return "7";
-		case (7):
-			return "8";
-		case (8):
-			return "9";
-		case (9):
-			return "10";
-		case (10):
-			return "J";
-		case (11):
-			return "Q";
-		case (12):
-			return "K";
-		default:
-			return null;
-		}
 	}
 
 	public int getRound() {

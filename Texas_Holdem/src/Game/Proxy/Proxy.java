@@ -9,4 +9,5 @@ public interface Proxy {
 	public void getTurn();//Run
 	public int getUserNum();
 	public void setCheck();
+	public String getUserName();
 }

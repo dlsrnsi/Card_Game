@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+
+import Game.Game_Data.Table;
+import Game.Game_Data.User;
 
 public class Proxy_Manager {
 	private List<PrintWriter> list = Collections
@@ -14,8 +18,8 @@ public class Proxy_Manager {
 	private static Proxy_Manager instance;
 	private List<Thread> threadList;
 	private int count;
-	private static final int poolsize = 10;
-
+	private static final int poolsize = 6;
+	
 	private Proxy_Manager() {
 		threadList = new LinkedList();
 		count = 0;
@@ -41,6 +45,7 @@ public class Proxy_Manager {
 		}
 		
 		threadList.add((Thread) proxy);
+		System.out.println("지금 프록시의 개수는 "+threadList.size());
 	}
 
 	public Proxy getProxy(int i) {

@@ -31,8 +31,10 @@ public class Game_ControllerTest extends Game_Controller {
 
 	@Test
 	public void testGiveCard() {
-		
-	}	
+		setUp();
+		giveCard(gm.getTable());
+		assertEquals(51, gm.getCardList().size());
+		}	
 
 	@Test
 	public void testGiveTurn() {

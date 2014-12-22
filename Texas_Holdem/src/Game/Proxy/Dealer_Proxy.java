@@ -4,11 +4,17 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.locks.ReentrantLock;
 
+import Client.ReceiverThread;
+import Game.Game_Data.Game_Model;
+import Game.Game_Data.Table;
 import Game.Server.Game_Controller;
 
-public class Dealer_Proxy extends Thread implements Proxy {
+public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 	Game_Controller gc;
 	Proxy_Manager pm;
 	Socket socket;
@@ -19,7 +25,8 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	int minimalBet = 1;
 	boolean check;
 	boolean isTurn;
-
+	String userName;
+	
 	public Dealer_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
 		pm = Proxy_Manager.getInstance();
@@ -34,29 +41,27 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	}
 
 	public void run() {
-		String name = null;
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
-			name = reader.readLine();
-			name += "(Dealer)";
+			userName = reader.readLine();
 			pm.setCount(pm.getCount() + 1);
-			sendAll("#" + name + " is Joined" + pm.getCount());
+			sendAll("#" + userName + " is Joined/" + pm.getCount());
 
 			while (true) {
 				String str = reader.readLine();
 				if (str == null) {
 					break;
 				} else if (str.equals("StartGame") == true)
-					startGame(name);
+					startGame(userName);
 
-				sendAll(name + ">" + str);
+				sendAll(userName + ">" + str);
 			}
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		} finally {
 			pm.getList().remove(writer);
-			sendAll("#" + name + " is out");
+			sendAll("#" + userName + " is out/");
 			pm.setCount(pm.getCount() - 1);
 			try {
 				socket.close();
@@ -131,6 +136,7 @@ public class Dealer_Proxy extends Thread implements Proxy {
 	@Override
 	public void exitgame() {
 		
+		
 	}
 
 	@Override
@@ -148,4 +154,47 @@ public class Dealer_Proxy extends Thread implements Proxy {
 		this.check = true;
 	}
 
+	@Override
+	public void userCardUpdate(int userNum, int card) {
+		String str= "userCard/"+String.valueOf(userNum)+"/"+String.valueOf(card);
+		sendAll(str);
+		System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLllll");
+	}
+
+	@Override
+	public void userStateUpdate(int userNum, boolean state) {
+		String str= "userState/"+String.valueOf(userNum)+"/"+String.valueOf(state);
+		sendAll(str);
+	}
+
+	@Override
+	public void userMoneyUpdate(int userNum, int money) {
+		String str= "userMoney/"+String.valueOf(userNum)+"/"+String.valueOf(money);
+		sendAll(str);
+	}
+
+	@Override
+	public void tableCardUpdate(int card) {
+		String str= "tableCard/"+String.valueOf(card);
+		sendAll(str);	
+	}
+
+	@Override
+	public void tableMoneyUpdate(int money) {
+		String str= "tableMoney/"+String.valueOf(money);
+		sendAll(str);
+	}
+
+	@Override
+	public void userNameUpdate(int userNum, String userName){
+
+		String str= "userName/"+String.valueOf(userNum)+"/"+userName;
+		System.out.println(str);
+		sendAll(str);	
+	}
+	@Override
+	public String getUserName() {
+		return userName;
+		
+	}
 }

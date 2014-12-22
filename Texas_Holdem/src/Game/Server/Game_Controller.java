@@ -11,11 +11,12 @@ import Game.Game_Data.Game_Model;
 import Game.Game_Data.Game_Set;
 import Game.Game_Data.User;
 import Game.Proxy.Dealer_Proxy;
+import Game.Proxy.GameObserver;
 import Game.Proxy.Proxy;
 import Game.Proxy.Proxy_Manager;
 import Game.Proxy.User_Proxy;
 
-public class Game_Controller implements Observer {
+public class Game_Controller{
 	private static Game_Controller gc;
 	Proxy_Manager pm;
 	Game_Model gm;
@@ -35,21 +36,24 @@ public class Game_Controller implements Observer {
 		this.isStarted = true;
 		pm = Proxy_Manager.getInstance();
 		gm = new Game_Model(numOfUser);
+		for(int i = 0 ; i < numOfUser ; i ++){
+			for(int j = 0 ; j <numOfUser; j++){
+				gm.getUser(i).registObserver((GameObserver) pm.getProxy(j));
+			}
+			gm.getTable().registObserver((GameObserver) pm.getProxy(i));
+		}
 		this.minimalBet = minimalBet;
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < numOfUser; i++) {
 				giveCard((User) gm.getUser(i));
-
 				System.out.println(((User) gm.getUserList().get(i)).getClass()
 						.getName()
 						+ i
 						+ "은"
 						+ ((User) gm.getUserList().get(i)).getCardList()
 								.toString() + "을 가지고 있다");
-
 			}
 		}
-		gm.addObserver(this);
 		bet(1, minimalBet);
 		bet(2, minimalBet * 2);
 		gm.setCurUser(1);
@@ -64,8 +68,9 @@ public class Game_Controller implements Observer {
 	}
 
 	public void giveCard(Game_Set set) {
-		set.getCardList()
-				.add(gm.getCardList().get(gm.getCardList().size() - 1));
+		System.out.println("giveCard 2번째 들어가는지 궁금 ");
+		set.addCard((int)(gm.getCardList().get(gm.getCardList().size() - 1)));
+		
 		gm.getCardList().remove(gm.getCardList().size() - 1);
 	}
 
@@ -145,10 +150,8 @@ public class Game_Controller implements Observer {
 		return isStarted;
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
+	public Game_Model getGame_Model(){
+		return gm;
 	}
 
 }
