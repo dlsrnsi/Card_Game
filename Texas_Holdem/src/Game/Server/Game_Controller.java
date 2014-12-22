@@ -16,7 +16,7 @@ import Game.Proxy.Proxy;
 import Game.Proxy.Proxy_Manager;
 import Game.Proxy.User_Proxy;
 
-public class Game_Controller{
+public class Game_Controller {
 	private static Game_Controller gc;
 	Proxy_Manager pm;
 	Game_Model gm;
@@ -36,19 +36,19 @@ public class Game_Controller{
 		this.isStarted = true;
 		pm = Proxy_Manager.getInstance();
 		gm = new Game_Model(numOfUser);
-		for(int i = 0 ; i < numOfUser ; i ++){
-			User user= gm.getUser(i);
-			for(int j = 0 ; j <numOfUser; j++){
+		for (int i = 0; i < numOfUser; i++) {
+			User user = gm.getUser(i);
+			for (int j = 0; j < numOfUser; j++) {
 				user.registObserver((GameObserver) pm.getProxy(j));
 			}
-			user.setUserName(Proxy_Manager.getInstance().getProxy(i).getUserName());
+			user.setUserName(Proxy_Manager.getInstance().getProxy(i)
+					.getUserName());
 			user.setState(true);
-			user.setMoney(1000);//유저는 1000원을 가지고 시작한다
+			user.setMoney(1000);// 유저는 1000원을 가지고 시작한다
 			gm.getTable().registObserver((GameObserver) pm.getProxy(i));
 		}
+
 		
-		
-		this.minimalBet = minimalBet;
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < numOfUser; i++) {
 				giveCard((User) gm.getUser(i));
@@ -60,9 +60,11 @@ public class Game_Controller{
 								.toString() + "을 가지고 있다");
 			}
 		}
-		bet(1, minimalBet);
-		bet(2, minimalBet * 2);
-		gm.setCurUser(1);
+		this.minimalBet = minimalBet;
+		bet(1, this.minimalBet);
+		this.minimalBet = minimalBet * 2;
+		bet(2, this.minimalBet);
+		gm.setCurUser(2);
 		calculateTurn();
 
 	}
@@ -74,9 +76,7 @@ public class Game_Controller{
 	}
 
 	public void giveCard(Game_Set set) {
-		System.out.println("giveCard 2번째 들어가는지 궁금 ");
-		set.addCard((int)(gm.getCardList().get(gm.getCardList().size() - 1)));
-		
+		set.addCard((int) (gm.getCardList().get(gm.getCardList().size() - 1)));
 		gm.getCardList().remove(gm.getCardList().size() - 1);
 	}
 
@@ -84,11 +84,11 @@ public class Game_Controller{
 		gm.setCurUser(userNum);
 		if (gm.getUser(userNum).getState()) {
 			System.out.println("유저" + userNum + "의 턴입니다");
-			if(check){
-				//(pm.getProxy(userNum)).setCheck();
+			if (check) {
+				(pm.getProxy(userNum)).setCheck();
 				this.check = false;
 			}
-			//(pm.getProxy(userNum)).getTurn();
+			(pm.getProxy(userNum)).getTurn();
 		} else {
 			calculateTurn();
 		}
@@ -101,18 +101,17 @@ public class Game_Controller{
 	public void calculateTurn() {
 		int livingUser = 0;
 		int maybeWinner = 0;
-		for(int i = 0 ; i < gm.getUserList().size(); i++){
-			if(gm.getUser(i).getState()){
+		for (int i = 0; i < gm.getUserList().size(); i++) {
+			if (gm.getUser(i).getState()) {
 				livingUser++;
 				maybeWinner = i;
 			}
 		}
-		if(livingUser==1){
+		if (livingUser == 1) {
 			winPrize(maybeWinner);
-			System.out.println(maybeWinner+"가 이겼습니다");
-		}
-		else{
-			System.out.println("calTurn");
+			System.out.println(maybeWinner + "가 이겼습니다");
+		} else {
+			System.out.println(gm.getRound()+"라운드 입니다");
 			int curUser = gm.getCurUser();
 			curUser++;
 			if (curUser == gm.getUserList().size()) {
@@ -152,11 +151,12 @@ public class Game_Controller{
 	public void setMinimalBet(int minimalBet) {
 		this.minimalBet = minimalBet;
 	}
-	public boolean checkStarted(){
+
+	public boolean checkStarted() {
 		return isStarted;
 	}
 
-	public Game_Model getGame_Model(){
+	public Game_Model getGame_Model() {
 		return gm;
 	}
 

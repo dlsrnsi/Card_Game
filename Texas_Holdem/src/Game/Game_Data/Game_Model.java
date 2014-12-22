@@ -29,7 +29,7 @@ public class Game_Model {
 		boolean check;
 		cardList = new LinkedList<>();
 		for (int i = 0; i < 52 ; i++) {
-			ran = r.nextInt(52) + 1;
+			ran = r.nextInt(52);
 			check = true;
 			for (int j = 0; j < i; j++) {
 				if ((int) cardList.get(j) == ran) {
@@ -41,6 +41,7 @@ public class Game_Model {
 				cardList.add(ran);
 			}
 		}
+		System.out.println(cardList.toString());
 		round = 0;// Round는 0부터 시작한다;
 		table = new Table();
 		table.setMoney(0);// 테이블에서는 0원(베팅머니 없음)

@@ -12,7 +12,6 @@ public class User extends Game_Set {
 		observerList=new LinkedList();
 		cardList = new LinkedList();
 		setUserName(userName);
-		System.out.println("유저 생성자"+userName);
 		this.userID = userID;
 	}
 
@@ -48,7 +47,6 @@ public class User extends Game_Set {
 		return userName;
 	}
 	public void setUserName(String userName){
-		System.out.println("메소드 실행 테스트"+userName);
 		this.userName = userName;
 		for(int i = 0 ; i < observerList.size(); i++){
 			observerList.get(i).userNameUpdate(userID, userName);

@@ -29,6 +29,7 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 	public Dealer_Proxy(Socket socket, int userNum) {
 		gc = Game_Controller.getInstance();
 		pm = Proxy_Manager.getInstance();
+		minimalBet=10;
 		this.socket = socket;
 		this.userNum = userNum;
 		isTurn = false;
@@ -81,6 +82,7 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 			pm.getList().remove(writer);
 			sendAll("#" + userName + " is out/");
 			pm.setCount(pm.getCount() - 1);
+			exitgame();
 			try {
 				socket.close();
 			} catch (Exception ignored) {
@@ -97,7 +99,7 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 
 	public void startGame() {
 		if (!gc.checkStarted()) {
-			gc.startGame(pm.getCount(), 10);
+			gc.startGame(pm.getCount(), minimalBet);
 		}
 	}
 
@@ -159,6 +161,9 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 	@Override
 	public void getTurn() {
 		System.out.println("행동을 입력하세요");
+		System.out.println("Proxy"+userNum+"이 턴을 얻었습니다");
+		String str = userName + "의 턴입니다";
+		sendAll(str);
 		this.isTurn = true;
 	}
 
@@ -175,7 +180,7 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 	@Override
 	public void userCardUpdate(int userNum, int card) {
 		String str = "userCard/" + String.valueOf(userNum) + "/"
-				+ String.valueOf(card);
+				+ String.valueOf(card)+"/" + userName;
 		sendAll(str);
 	}
 
@@ -207,9 +212,7 @@ public class Dealer_Proxy extends Thread implements Proxy, GameObserver {
 
 	@Override
 	public void userNameUpdate(int userNum, String userName) {
-
 		String str = "userName/" + String.valueOf(userNum) + "/" + userName;
-		System.out.println(str);
 		sendAll(str);
 	}
 

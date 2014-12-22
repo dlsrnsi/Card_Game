@@ -27,6 +27,5 @@ public abstract class Game_Set {
 	abstract public void addCard(int cardNum);
 	public void registObserver(GameObserver o){
 		observerList.add(o);
-		System.out.println(this.getClass().getName()+"은 " + observerList.size() + "만큼의 옵저버를 가지고 잇습니다");
 	}
 }

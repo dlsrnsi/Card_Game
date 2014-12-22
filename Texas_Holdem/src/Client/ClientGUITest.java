@@ -15,9 +15,6 @@ public class ClientGUITest extends ClientGUI{
 	@Test
 	public void testSetframe() throws Exception {
 		setUp();
-		String str = "#p1 is joined";
-		setframe(str);
-		assertEquals("#p1",PlayerName1.getText());
 		
 	}
 
@@ -49,6 +46,12 @@ public class ClientGUITest extends ClientGUI{
 	@Test
 	public void testMyframe() {
 		fail("Not yet implemented");
+	}
+	@Test
+	public void testGetNumber() throws Exception{
+		setUp();
+		assertEquals("A",getNumber(51));
+		assertEquals("",getNumber(52));
 	}
 
 }

@@ -27,6 +27,7 @@ public class User_Proxy extends Thread implements Proxy, GameObserver{
 		
 		gc = Game_Controller.getInstance();
 		this.userName = userName;
+		this.userNum = userNum;
 		this.socket = socket;
 		this.isTurn = false;
 		pm = Proxy_Manager.getInstance();
@@ -73,6 +74,7 @@ public class User_Proxy extends Thread implements Proxy, GameObserver{
 			pm.getList().remove(writer);
 			sendAll("#" + userName + " is out/");
 			pm.setCount(pm.getCount() - 1);
+			exitgame();
 			try {
 				socket.close();
 			} catch (Exception ignored) {
@@ -137,6 +139,9 @@ public class User_Proxy extends Thread implements Proxy, GameObserver{
 	@Override
 	public void getTurn() {
 		System.out.println("행동을 입력하세요");
+		System.out.println("Proxy"+userNum+"이 턴을 얻었습니다");
+		String str = userName + "의 턴입니다";
+		sendAll(str);
 		this.isTurn = true;
 	}
 
@@ -152,7 +157,7 @@ public class User_Proxy extends Thread implements Proxy, GameObserver{
 
 	@Override
 	public void userCardUpdate(int userNum, int card) {
-		String str= "userCard/"+String.valueOf(userNum)+"/"+String.valueOf(card);
+		String str= "userCard/"+String.valueOf(userNum)+"/"+String.valueOf(card)+"/"+userName;
 		sendAll(str);
 	}
 

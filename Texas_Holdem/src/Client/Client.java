@@ -50,7 +50,7 @@ public class Client {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
+		frame = new JFrame("Write your name");
 		frame.setBounds(100, 100, 325, 122);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -64,7 +64,6 @@ public class Client {
 		
 		textField = new JTextField();
 		panel_2.add(textField);
-		textField.setText("\uC774\uB984\uC744 \uC785\uB825\uD558\uC138\uC694");
 		textField.setColumns(10);
 		
 		JPanel panel_1 = new JPanel();

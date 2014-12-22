@@ -42,6 +42,7 @@ public class ClientGUI {
 	JTextArea Player4_Card2;
 	JTextArea Player5_Card2;
 	JTextArea Player6_Card2;
+	List<JTextArea> tableCardList;
 	JTextArea TableCard1;
 	JTextArea TableCard2;
 	JTextArea TableCard3;
@@ -68,20 +69,7 @@ public class ClientGUI {
 	 * @wbp.parser.entryPoint
 	 */
 	public void setframe(String str) {
-		String name = str.split(" is")[0];
 		StateText.setText(StateText.getText() + str + "\n");
-		if (PlayerName1.getText().equals(""))
-			PlayerName1.setText(name);
-		else if (PlayerName2.getText().equals(""))
-			PlayerName2.setText(name);
-		else if (PlayerName3.getText().equals(""))
-			PlayerName3.setText(name);
-		else if (PlayerName4.getText().equals(""))
-			PlayerName4.setText(name);
-		else if (PlayerName5.getText().equals(""))
-			PlayerName5.setText(name);
-		else if (PlayerName6.getText().equals(""))
-			PlayerName6.setText(name);
 	}
 
 	public String getShape(int card) {
@@ -160,16 +148,28 @@ public class ClientGUI {
 	}
 
 	public void setframetableCard(String str) {
-		if (TableCard1.getText().equals(null))
-			TableCard1.setText(str.split("/")[1]);
-		else if (TableCard2.getText().equals(null))
-			TableCard2.setText(str.split("/")[1]);
-		else if (TableCard3.getText().equals(null))
-			TableCard3.setText(str.split("/")[1]);
-		else if (TableCard4.getText().equals(null))
-			TableCard4.setText(str.split("/")[1]);
-		else if (TableCard5.getText().equals(null))
-			TableCard5.setText(str.split("/")[1]);
+		int i = Integer.parseInt(str.split("/")[1]);
+		String card = getShape(i)+"_"+getNumber(i);
+		if(tableCardList.get(0).getText().equals("")){
+			tableCardList.get(0).setText(card);
+		}
+		else if(tableCardList.get(0).getText().equals(card)){	}
+		else if(tableCardList.get(1).getText().equals("")){
+			tableCardList.get(1).setText(card);
+		}
+		else if(tableCardList.get(1).getText().equals(card)){	}
+		else if(tableCardList.get(2).getText().equals("")){
+			tableCardList.get(2).setText(card);
+		}
+		else if(tableCardList.get(2).getText().equals(card)){	}
+		else if(tableCardList.get(3).getText().equals("")){
+			tableCardList.get(3).setText(card);
+		}
+		else if(tableCardList.get(3).getText().equals(card)){	}
+		else if(tableCardList.get(4).getText().equals("")){
+			tableCardList.get(4).setText(card);
+		}
+		else if(tableCardList.get(4).getText().equals(card)){	}
 	}
 
 	public void setframetableMoney(String str) {
@@ -177,11 +177,10 @@ public class ClientGUI {
 		TableStatus.setText("Money : " + money);
 	}
 
-	public void setfrmeuserName(String str) {
+	public void setframeuserName(String str) {
 		String userNum = str.split("/")[1];
 		String name = str.split("/")[2];
-		playerStatusList.get(Integer.parseInt(userNum)).setText(name);
-
+		playerNameList.get(Integer.parseInt(userNum)).setText(name);
 	}
 
 	public void Myframe(Thread thread) {
@@ -637,8 +636,8 @@ public class ClientGUI {
 		panel_Textplay.add(panel_3, BorderLayout.CENTER);
 		panel_3.setLayout(new GridLayout(1, 0, 0, 0));
 
-		PlayerStatus1 = new JLabel();
-		panel_3.add(PlayerStatus1);
+//		PlayerStatus = new JLabel("1111111111111111111111111111");
+//		panel_3.add(PlayerStatus);
 
 		card1List = new ArrayList();
 		card1List.add(Player1_Card1);
@@ -668,6 +667,11 @@ public class ClientGUI {
 		playerNameList.add(PlayerName4);
 		playerNameList.add(PlayerName5);
 		playerNameList.add(PlayerName6);
-
+		tableCardList = new ArrayList();
+		tableCardList.add(TableCard1);
+		tableCardList.add(TableCard2);
+		tableCardList.add(TableCard3);
+		tableCardList.add(TableCard4);
+		tableCardList.add(TableCard5);
 	}
 }

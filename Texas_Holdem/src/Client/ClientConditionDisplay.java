@@ -39,12 +39,17 @@ public class ClientConditionDisplay implements Observer{
 			if(check == 0)	check = 1;
 			else {
 				String D = str.split("/")[0];
-				if (D.equals("userCard"))				window.setframeUserCard(str);
+				System.out.println(D + "-------------------------------------------------------------");
+				if (D.equals("userCard")){
+					if(args.equals(str.split("/")[3]))
+						window.setframeUserCard(str);
+				}
 				else if (D.equals("userState"))			window.setframeUserState(str);
 				else if (D.equals("userMoney"))			window.setframeUserMoney(str);
 				else if (D.equals("tableCard"))			window.setframetableCard(str);
 				else if (D.equals("tableMoney"))		window.setframetableMoney(str);
-				else if (D.equals("userName")) 			window.setfrmeuserName(str);
+				else if (D.equals("userName")) 			window.setframeuserName(str);
+				else									window.setframe(str);
 			}
 		}
 		System.out.println("end update");

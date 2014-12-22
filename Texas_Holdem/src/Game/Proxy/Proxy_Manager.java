@@ -37,7 +37,6 @@ public class Proxy_Manager {
 		if(message.equals("Dealer")){
 			proxy=new Dealer_Proxy(socket, 0);
 			((Thread)proxy).start();
-			proxy.getTurn();
 		}
 		else{
 			proxy=new User_Proxy(socket, threadList.size());
@@ -45,7 +44,7 @@ public class Proxy_Manager {
 		}
 		
 		threadList.add((Thread) proxy);
-		System.out.println("지금 프록시의 개수는 "+threadList.size());
+		System.out.println(getProxy(threadList.size()-1)+"의 userNum은"+getProxy(threadList.size()-1).getUserNum());
 	}
 
 	public Proxy getProxy(int i) {
